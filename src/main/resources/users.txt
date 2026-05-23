@@ -1,0 +1,2 @@
+tech1,password,john@tracker.com,ROLE_EMPLOYEE,John Doe (Technician),1234567890
+owner1,password,alex@tracker.com,ROLE_USER,Alex Smith (Car Owner),9876543210

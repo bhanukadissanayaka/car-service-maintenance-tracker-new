@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - CarTracker'"></title>
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container" th:fragment="app-shell(activeTab, content)">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <i class="fa-solid fa-gauge-high logo-icon"></i>
+                <span class="logo-text">CarTracker</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <!-- Customer Navigation Links -->
+                <li class="nav-item" th:classappend="${activeTab == 'dashboard'} ? 'active' : ''" sec:authorize="hasAuthority('ROLE_USER')">
+                    <a th:href="@{/dashboard}">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item" th:classappend="${activeTab == 'add-car'} ? 'active' : ''" sec:authorize="hasAuthority('ROLE_USER')">
+                    <a th:href="@{/cars/add}">
+                        <i class="fa-solid fa-car-side"></i>
+                        <span>Register Vehicle</span>
+                    </a>
+                </li>
+                
+                <!-- Employee/Mechanic Navigation Links -->
+                <li class="nav-item" th:classappend="${activeTab == 'employee-dashboard'} ? 'active' : ''" sec:authorize="hasAnyAuthority('ROLE_EMPLOYEE', 'ROLE_ADMIN')">
+                    <a th:href="@{/employee/dashboard}">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <span>Service Desk</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="nav-footer">
+                <div class="user-badge" th:if="${#authentication.principal != null}">
+                    <div class="avatar" th:text="${#strings.substring(#authentication.name,0,1).toUpperCase()}">U</div>
+                    <div class="user-info">
+                        <span class="user-name" th:text="${#authentication.name}">Username</span>
+                        <span class="user-role" sec:authorize="hasAuthority('ROLE_USER')">Car Owner</span>
+                        <span class="user-role" sec:authorize="hasAuthority('ROLE_EMPLOYEE')">Mechanic</span>
+                        <span class="user-role" sec:authorize="hasAuthority('ROLE_ADMIN')">Administrator</span>
+                    </div>
+                </div>
+                
+                <form th:action="@{/logout}" method="post" style="width: 100%;">
+                    <button type="submit" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Log Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content" th:insert="${content}">
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout :: head('Owner Dashboard')}">
+</head>
+<body>
+    <div th:replace="~{layout :: app-shell('dashboard', ~{::content})}">
+        <th:block th:fragment="content">
+            <!-- Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Fleet Dashboard</h1>
+                    <p class="page-subtitle" th:text="'Welcome back, ' + ${#authentication.name} + '! Monitor your fleet\'s health.'"></p>
+                </div>
+                <a th:href="@{/cars/add}" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Vehicle</span>
+                </a>
+            </div>
+            
+            <!-- Success alerts from redirection -->
+            <div th:if="${param.carAdded}" class="auth-success" style="margin-bottom: 30px;">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Vehicle has been successfully registered to your fleet!</span>
+            </div>
+            <div th:if="${param.carDeleted}" class="auth-success" style="margin-bottom: 30px; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: #ef4444;">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Vehicle has been successfully removed from your fleet!</span>
+            </div>
+            
+            <!-- Metrics Panel -->
+            <div class="metrics-grid">
+                <div class="metric-card primary">
+                    <div class="metric-icon">
+                        <i class="fa-solid fa-car-side"></i>
+                    </div>
+                    <div class="metric-details">
+                        <span class="metric-value" th:text="${totalCars}">0</span>
+                        <span class="metric-label">My Fleet</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card success">
+                    <div class="metric-icon">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <div class="metric-details">
+                        <span class="metric-value" th:text="'$' + ${#numbers.formatDecimal(totalExpenses, 1, 'COMMA', 2, 'POINT')}">$0.00</span>
+                        <span class="metric-label">Total Expenses</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card warning">
+                    <div class="metric-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="metric-details">
+                        <span class="metric-value" th:text="${scheduledTasksCount}">0</span>
+                        <span class="metric-label">Scheduled Tasks</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card danger">
+                    <div class="metric-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="metric-details">
+                        <span class="metric-value" th:text="${overdueAlertsCount}">0</span>
+                        <span class="metric-label">Overdue Warnings</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Dashboard Body (Fleet vs Alerts) -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 40px; align-items: start;">
+                <!-- Left: Fleet Odometer Cards -->
+                <div>
+                    <h2 style="font-size: 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-car" style="color: var(--primary);"></i>
+                        <span>Vehicle Fleet</span>
+                    </h2>
+                    
+                    <div th:if="${#lists.isEmpty(cars)}" class="glass-panel" style="text-align: center; padding: 60px 40px;">
+                        <i class="fa-solid fa-car-rear" style="font-size: 60px; color: var(--text-secondary); margin-bottom: 24px; opacity: 0.3;"></i>
+                        <h3 style="font-size: 20px; margin-bottom: 10px;">No Vehicles Registered</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 30px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            Register your vehicle now to track real-time odometer alerts and schedule maintenance with our service station.
+                        </p>
+                        <a th:href="@{/cars/add}" class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Register Your First Vehicle</span>
+                        </a>
+                    </div>
+                    
+                    <div th:if="${!#lists.isEmpty(cars)}" class="cars-grid">
+                        <div th:each="car : ${cars}" class="car-card">
+                            <div class="car-card-header">
+                                <div class="car-meta">
+                                    <h3 class="car-title" th:text="${car.make} + ' ' + ${car.model}">Vehicle name</h3>
+                                    <span class="car-year" th:text="${car.year} + ' • ' + ${car.licensePlate}">Year & Plate</span>
+                                </div>
+                                <div class="car-icon">
+                                    <i class="fa-solid fa-car"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="car-details-list">
+                                <div class="car-detail-item">
+                                    <span class="car-detail-label">Current Odometer</span>
+                                    <span class="car-detail-value" th:text="${#numbers.formatInteger(car.currentMileage, 1, 'COMMA')} + ' mi'">0 mi</span>
+                                </div>
+                                <div class="car-detail-item" th:if="${car.vin != null && !#strings.isEmpty(car.vin)}">
+                                    <span class="car-detail-label">VIN</span>
+                                    <span class="car-detail-value" style="font-family: monospace;" th:text="${car.vin}">VIN</span>
+                                </div>
+                                <div class="car-detail-item">
+                                    <span class="car-detail-label">Active Reminders</span>
+                                    <span class="car-detail-value" th:text="${#lists.size(car.maintenanceReminders)}">0</span>
+                                </div>
+                            </div>
+                            
+                            <a th:href="@{'/cars/' + ${car.id}}" class="btn btn-secondary" style="width: 100%;">
+                                <span>Vehicle Profile</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right: Active Maintenance Alerts Board -->
+                <div>
+                    <h2 style="font-size: 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-bell" style="color: var(--warning);"></i>
+                        <span>Alerts Board</span>
+                    </h2>
+                    
+                    <div class="glass-panel" style="padding: 24px;">
+                        <div th:if="${#lists.isEmpty(reminders)}" style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                            <i class="fa-solid fa-shield-halved" style="font-size: 40px; margin-bottom: 16px; opacity: 0.3; color: var(--success);"></i>
+                            <p style="font-size: 14px;">All vehicles operating optimally. No pending alerts detected!</p>
+                        </div>
+                        
+                        <div th:if="${!#lists.isEmpty(reminders)}" class="alerts-container">
+                            <div th:each="reminder : ${reminders}" class="alert-item" 
+                                 th:classappend="${reminder.status.name() == 'OVERDUE'} ? 'danger-alert' : 'warning-alert'">
+                                <div class="alert-badge">
+                                    <i class="fa-solid" th:classappend="${reminder.status.name() == 'OVERDUE'} ? 'fa-triangle-exclamation' : 'fa-bell'"></i>
+                                </div>
+                                <div class="alert-msg-container">
+                                    <span class="alert-title" th:text="${reminder.description}">Service task</span>
+                                    <span class="alert-desc" th:if="${reminder.dueMileage != null}" th:text="'Due at ' + ${#numbers.formatInteger(reminder.dueMileage, 1, 'COMMA')} + ' mi'">Due mileage</span>
+                                    <span class="alert-desc" th:if="${reminder.dueDate != null}" th:text="'Due by ' + ${#temporals.format(reminder.dueDate, 'MMM dd, yyyy')}">Due date</span>
+                                    <span class="alert-car" th:text="${reminder.car.make} + ' ' + ${reminder.car.model}">Car info</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</body>
+</html>

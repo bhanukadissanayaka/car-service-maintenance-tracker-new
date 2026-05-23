@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Book Service')}">
+    <title>Book Service</title>
+</head>
+<body>
+
+    <div th:replace="~{layout :: app-shell('dashboard', ~{::content})}">
+        <th:block th:fragment="content">
+            <!-- Breadcrumbs -->
+            <div style="margin-bottom: 20px;">
+                <a th:href="@{'/cars/' + ${car.id}}" style="font-size: 14px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Vehicle Profile</span>
+                </a>
+            </div>
+
+            <!-- Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Book Service</h1>
+                    <p class="page-subtitle" th:text="'Schedule a service task for your ' + ${car.make} + ' ' + ${car.model}"></p>
+                </div>
+            </div>
+            
+            <!-- Form Panel -->
+            <div class="glass-panel form-card">
+                <form th:action="@{'/cars/' + ${car.id} + '/records/add'}" th:object="${record}" method="post">
+                    <div class="form-group">
+                        <label for="serviceType" class="form-label">Service Type / Task</label>
+                        <input type="text" id="serviceType" th:field="*{serviceType}" class="form-control" placeholder="e.g. Oil Change, Brake Replacement, Tire Rotation" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="serviceDate" class="form-label">Requested Date</label>
+                            <input type="date" id="serviceDate" th:field="*{serviceDate}" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="serviceMileage" class="form-label">Target Odometer Reading (mi)</label>
+                            <input type="number" id="serviceMileage" th:field="*{serviceMileage}" th:value="${car.currentMileage}" th:min="${car.currentMileage}" class="form-control" placeholder="Target mileage" required>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 16px; justify-content: flex-end; margin-top: 10px;">
+                        <a th:href="@{'/cars/' + ${car.id}}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span>Schedule Service</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <script>
+                // Set default date to today
+                document.getElementById('serviceDate').valueAsDate = new Date();
+            </script>
+        </th:block>
+    </div>
+</body>
+</html>

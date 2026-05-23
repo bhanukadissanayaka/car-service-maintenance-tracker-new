@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Sign Up')}">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card glass-panel" style="max-width: 520px;">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fa-solid fa-gauge-high logo-icon"></i>
+                    <span class="logo-text">CarTracker</span>
+                </div>
+                <h2 class="auth-title">Create Account</h2>
+                <p class="auth-subtitle">Join the elite car tracking platform</p>
+            </div>
+            
+            <div th:if="${error}" class="auth-error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span th:text="${error}">Error details</span>
+            </div>
+            
+            <form th:action="@{/register}" th:object="${user}" method="post">
+                <div class="form-group">
+                    <label class="form-label">I am registering as a...</label>
+                    <div class="role-selector-container">
+                        <label class="role-radio-label">
+                            <input type="radio" th:field="*{role}" value="ROLE_USER" required checked>
+                            <div class="role-radio-card">
+                                <i class="fa-solid fa-car"></i>
+                                <span>Car Owner</span>
+                            </div>
+                        </label>
+                        <label class="role-radio-label">
+                            <input type="radio" th:field="*{role}" value="ROLE_EMPLOYEE" required>
+                            <div class="role-radio-card">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                <span>Service Employee</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" id="fullName" th:field="*{fullName}" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" class="form-control" placeholder="Enter your phone number" required 
+                           pattern="^(?:\D*\d){10,}\D*$" title="Phone number must contain at least 10 digits">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" th:field="*{username}" class="form-control" placeholder="Choose a username" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 30px;">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="Choose a secure password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px;">
+                    <span>Create Account</span>
+                    <i class="fa-solid fa-user-plus"></i>
+                </button>
+            </form>
+            
+            <div class="auth-footer-text">
+                Already have an account? <a th:href="@{/login}">Sign in instead</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
