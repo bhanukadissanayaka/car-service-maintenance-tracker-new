@@ -43,3 +43,4 @@ public class MaintenanceReminder {
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 }
+
