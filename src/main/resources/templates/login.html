@@ -3,54 +3,54 @@
 <head th:replace="~{layout :: head('Sign In')}">
 </head>
 <body>
-    <div class="auth-wrapper">
-        <div class="auth-card glass-panel">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fa-solid fa-gauge-high logo-icon"></i>
-                    <span class="logo-text">CarTracker</span>
-                </div>
-                <h2 class="auth-title">Welcome Back</h2>
-                <p class="auth-subtitle">Sign in to track vehicle health & tasks</p>
+<div class="auth-wrapper">
+    <div class="auth-card glass-panel">
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fa-solid fa-gauge-high logo-icon"></i>
+                <span class="logo-text">CarTracker</span>
             </div>
-            
-            <!-- Success/Error Signals -->
-            <div th:if="${param.error}" class="auth-error">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Invalid credentials. Please try again.</span>
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to track vehicle health & tasks</p>
+        </div>
+
+        <!-- Success/Error Signals -->
+        <div th:if="${param.error}" class="auth-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Invalid credentials. Please try again.</span>
+        </div>
+
+        <div th:if="${param.logout}" class="auth-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Successfully signed out. See you soon!</span>
+        </div>
+
+        <div th:if="${param.registered}" class="auth-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Account created! Please sign in below.</span>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required autofocus>
             </div>
-            
-            <div th:if="${param.logout}" class="auth-success">
-                <i class="fa-solid fa-circle-check"></i>
-                <span>Successfully signed out. See you soon!</span>
+
+            <div class="form-group" style="margin-bottom: 30px;">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
             </div>
-            
-            <div th:if="${param.registered}" class="auth-success">
-                <i class="fa-solid fa-circle-check"></i>
-                <span>Account created! Please sign in below.</span>
-            </div>
-            
-            <form th:action="@{/login}" method="post">
-                <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required autofocus>
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 30px;">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px;">
-                    <span>Sign In</span>
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                </button>
-            </form>
-            
-            <div class="auth-footer-text">
-                Don't have an account? <a th:href="@{/register}">Create one here</a>
-            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px;">
+                <span>Sign In</span>
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </button>
+        </form>
+
+        <div class="auth-footer-text">
+            Don't have an account? <a th:href="@{/register}">Create one here</a>
         </div>
     </div>
+</div>
 </body>
 </html>
