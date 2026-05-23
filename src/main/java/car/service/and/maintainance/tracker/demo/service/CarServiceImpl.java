@@ -25,12 +25,12 @@ public class CarServiceImpl implements CarService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
         car.setUser(user);
-        
+
         // Handle optional unique VIN field by mapping empty strings to null
         if (car.getVin() != null && car.getVin().trim().isEmpty()) {
             car.setVin(null);
         }
-        
+
         return carRepository.save(car);
     }
 
@@ -53,13 +53,13 @@ public class CarServiceImpl implements CarService {
     public void updateMileage(Long carId, Integer mileage) {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new IllegalArgumentException("Car not found with ID: " + carId));
-        
+
         if (mileage < car.getCurrentMileage()) {
             throw new IllegalArgumentException("Odometer reading cannot be decreased from " + car.getCurrentMileage());
         }
-        
+
         car.setCurrentMileage(mileage);
-        
+
         // Intelligent Odometer Checker: update active pending reminders
         if (car.getMaintenanceReminders() != null) {
             for (MaintenanceReminder reminder : car.getMaintenanceReminders()) {
@@ -70,7 +70,7 @@ public class CarServiceImpl implements CarService {
                 }
             }
         }
-        
+
         carRepository.save(car);
     }
 

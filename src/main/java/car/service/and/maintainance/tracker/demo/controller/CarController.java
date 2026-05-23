@@ -44,7 +44,7 @@ public class CarController {
         model.addAttribute("car", car);
         model.addAttribute("records", records);
         model.addAttribute("reminders", reminders);
-        
+
         return "car-details";
     }
 

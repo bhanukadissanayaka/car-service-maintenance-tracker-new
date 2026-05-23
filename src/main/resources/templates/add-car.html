@@ -5,63 +5,63 @@
 </head>
 <body>
 
-    <div th:replace="~{layout :: app-shell('add-car', ~{::content})}">
-        <th:block th:fragment="content">
-            <!-- Header -->
-            <div class="page-header">
-                <div>
-                    <h1 class="page-title">Register Vehicle</h1>
-                    <p class="page-subtitle">Add a new car to your garage to start tracking maintenance alerts</p>
-                </div>
+<div th:replace="~{layout :: app-shell('add-car', ~{::content})}">
+    <th:block th:fragment="content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Register Vehicle</h1>
+                <p class="page-subtitle">Add a new car to your garage to start tracking maintenance alerts</p>
             </div>
-            
-            <!-- Form Panel -->
-            <div class="glass-panel form-card">
-                <form th:action="@{/cars/add}" th:object="${car}" method="post">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="make" class="form-label">Manufacturer / Make</label>
-                            <input type="text" id="make" th:field="*{make}" class="form-control" placeholder="e.g. Porsche, Tesla" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="model" class="form-label">Model Name</label>
-                            <input type="text" id="model" th:field="*{model}" class="form-control" placeholder="e.g. 911 Carrera, Model S" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="year" class="form-label">Manufacture Year</label>
-                            <input type="number" id="year" th:field="*{year}" class="form-control" placeholder="e.g. 2023" min="1900" max="2027" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="licensePlate" class="form-label">License Plate Number</label>
-                            <input type="text" id="licensePlate" th:field="*{licensePlate}" class="form-control" placeholder="e.g. TX-992-K" required>
-                        </div>
-                    </div>
-                    
+        </div>
+
+        <!-- Form Panel -->
+        <div class="glass-panel form-card">
+            <form th:action="@{/cars/add}" th:object="${car}" method="post">
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="currentMileage" class="form-label">Current Odometer (mi)</label>
-                        <input type="number" id="currentMileage" th:field="*{currentMileage}" class="form-control" placeholder="Current mileage reading" min="0" required>
+                        <label for="make" class="form-label">Manufacturer / Make</label>
+                        <input type="text" id="make" th:field="*{make}" class="form-control" placeholder="e.g. Porsche, Tesla" required>
                     </div>
-                    
-                    <div class="form-group" style="margin-bottom: 30px;">
-                        <label for="vin" class="form-label">Vehicle Identification Number (VIN) <span style="font-size: 11px; color: var(--text-secondary); font-weight: normal;">(Optional)</span></label>
-                        <input type="text" id="vin" th:field="*{vin}" class="form-control" placeholder="17-digit VIN code" style="font-family: monospace;">
+
+                    <div class="form-group">
+                        <label for="model" class="form-label">Model Name</label>
+                        <input type="text" id="model" th:field="*{model}" class="form-control" placeholder="e.g. 911 Carrera, Model S" required>
                     </div>
-                    
-                    <div style="display: flex; gap: 16px; justify-content: flex-end;">
-                        <a th:href="@{/dashboard}" class="btn btn-secondary">Cancel</a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>Register Vehicle</span>
-                        </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="year" class="form-label">Manufacture Year</label>
+                        <input type="number" id="year" th:field="*{year}" class="form-control" placeholder="e.g. 2023" min="1900" max="2027" required>
                     </div>
-                </form>
-            </div>
-        </th:block>
-    </div>
+
+                    <div class="form-group">
+                        <label for="licensePlate" class="form-label">License Plate Number</label>
+                        <input type="text" id="licensePlate" th:field="*{licensePlate}" class="form-control" placeholder="e.g. TX-992-K" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="currentMileage" class="form-label">Current Odometer (mi)</label>
+                    <input type="number" id="currentMileage" th:field="*{currentMileage}" class="form-control" placeholder="Current mileage reading" min="0" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 30px;">
+                    <label for="vin" class="form-label">Vehicle Identification Number (VIN) <span style="font-size: 11px; color: var(--text-secondary); font-weight: normal;">(Optional)</span></label>
+                    <input type="text" id="vin" th:field="*{vin}" class="form-control" placeholder="17-digit VIN code" style="font-family: monospace;">
+                </div>
+
+                <div style="display: flex; gap: 16px; justify-content: flex-end;">
+                    <a th:href="@{/dashboard}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Register Vehicle</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</div>
 </body>
 </html>
