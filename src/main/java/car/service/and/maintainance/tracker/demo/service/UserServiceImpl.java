@@ -34,10 +34,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user.getPhoneNumber() == null || user.getPhoneNumber().replaceAll("\\D", "").length() < 10) {
             throw new IllegalArgumentException("Phone number must contain at least 10 digits");
         }
-        
+
         // Encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
+
         // Save
         return userRepository.save(user);
     }
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-                
+
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
