@@ -12,7 +12,6 @@ public interface MaintenanceRecordRepository extends JpaRepository<MaintenanceRe
     List<MaintenanceRecord> findByCarIdOrderByServiceDateDesc(Long carId);
     List<MaintenanceRecord> findByCarUserOrderByServiceDateDesc(User user);
     List<MaintenanceRecord> findByAssignedEmployee(User employee);
-    List<MaintenanceRecord> findByAssignedEmployeeId(Long employeeId);
+
     List<MaintenanceRecord> findByStatus(MaintenanceRecord.MaintenanceStatus status);
-    List<MaintenanceRecord> findByAssignedEmployeeAndStatus(User employee, MaintenanceRecord.MaintenanceStatus status);
 }
